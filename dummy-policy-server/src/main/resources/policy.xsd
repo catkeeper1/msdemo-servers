@@ -1,0 +1,28 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://policy.msdemo.ckr.org/web_service"
+           targetNamespace="http://policy.msdemo.ckr.org/web_service" elementFormDefault="qualified">
+
+    <xs:element name="getPolicyRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPolicyResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="policy" type="tns:policy"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="policy">
+        <xs:sequence>
+            <xs:element name="policyno" type="xs:string"/>
+            <xs:element name="policystatus" type="xs:int"/>
+            <xs:element name="inceptionDate" type="xs:date"/>
+            <xs:element name="currency" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
