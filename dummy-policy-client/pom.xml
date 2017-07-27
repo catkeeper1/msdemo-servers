@@ -48,7 +48,7 @@
                 </executions>
                 <configuration>
                     <schemaLanguage>WSDL</schemaLanguage>
-                    <generatePackage>org.ckr.msdemo.policy.web_service</generatePackage>
+                    <generatePackage>org.ckr.msdemo.policy.ws</generatePackage>
                     <schemas>
                         <schema>
                             <url>http://localhost:8080/ws/policy.wsdl</url>

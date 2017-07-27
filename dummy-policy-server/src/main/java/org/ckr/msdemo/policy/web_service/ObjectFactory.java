@@ -30,7 +30,8 @@ public class ObjectFactory {
 
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.ckr.msdemo.policy.web_service
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package:
+     * org.ckr.msdemo.policy.web_service
      * 
      */
     public ObjectFactory() {

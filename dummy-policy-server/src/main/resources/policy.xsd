@@ -1,5 +1,5 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://policy.msdemo.ckr.org/web_service"
-           targetNamespace="http://policy.msdemo.ckr.org/web_service" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://policy.msdemo.ckr.org/ws"
+           targetNamespace="http://policy.msdemo.ckr.org/ws" elementFormDefault="qualified">
 
     <xs:element name="getPolicyRequest">
         <xs:complexType>
