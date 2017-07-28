@@ -13,7 +13,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
  */
 @Endpoint
 public class PolicyEndpoint {
-    private static final String NAMESPACE_URI = "http://policy.msdemo.ckr.org/web_service";
+    private static final String NAMESPACE_URI = "http://policy.msdemo.ckr.org/ws";
 
     private PolicyRepository policyRepository;
 
