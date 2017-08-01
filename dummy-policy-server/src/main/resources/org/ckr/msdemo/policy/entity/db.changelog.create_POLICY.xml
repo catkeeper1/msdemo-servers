@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet author="liquibase-docs" id="createTable-org.ckr.msdemo.policy.entity.POLICY">
+
+        <createTable tableName="POLICY">
+            <column name="PLCNUM" type="java.sql.Types.VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRANNO" type="java.sql.Types.INTEGER(5)">
+                <constraints nullable="true"></constraints>
+            </column>
+            <column name="CURRENCY" type="java.sql.Types.VARCHAR(3)"/>
+            <column name="STATCODE" type="java.sql.Types.VARCHAR(2)"/>
+            <column name="OWNERID" type="java.sql.Types.INTEGER(19)"/>
+            <column name="OWNERNUM" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="OWNERNAME" type="java.sql.Types.VARCHAR(100)"/>
+            <column name="INCPDATE" type="java.sql.Types.DATE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase-docs" id="createTablePk-org.ckr.msdemo.policy.entity.POLICY">
+
+        <addPrimaryKey constraintName="PK_POLICY" columnNames="PLCNUM" tableName="POLICY" />
+    </changeSet>
+</databaseChangeLog>

@@ -1,4 +1,4 @@
-package org.ckr.msdemo.policy;
+package org.ckr.msdemo.policy.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

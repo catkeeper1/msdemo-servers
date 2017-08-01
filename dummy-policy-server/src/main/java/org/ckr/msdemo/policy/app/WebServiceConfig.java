@@ -1,4 +1,4 @@
-package org.ckr.msdemo.policy;
+package org.ckr.msdemo.policy.app;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
