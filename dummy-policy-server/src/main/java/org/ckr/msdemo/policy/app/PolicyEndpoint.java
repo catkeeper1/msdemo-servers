@@ -1,11 +1,11 @@
 package org.ckr.msdemo.policy.app;
 
 import org.ckr.msdemo.policy.entity.Policy;
+import org.ckr.msdemo.policy.repository.PolicyRepository;
 import org.ckr.msdemo.policy.ws.GetPolicyRequest;
 import org.ckr.msdemo.policy.ws.GetPolicyResponse;
-import org.ckr.msdemo.policy.repository.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
+import org.springframework.stereotype.Service;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -15,11 +15,12 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
  * @author yukai.a.lin
  */
 @Endpoint
+@Service
 public class PolicyEndpoint {
     private static final String NAMESPACE_URI = "http://policy.msdemo.ckr.org/ws";
 
     @Autowired
-    private PolicyRepository policyRepository;
+    PolicyRepository policyRepository;
 
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPolicyRequest")

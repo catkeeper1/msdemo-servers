@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
+import javax.xml.ws.WebServiceClient;
 
+@WebServiceClient
 public class PolicyClient extends WebServiceGatewaySupport {
 
     private static final Logger log = LoggerFactory.getLogger(PolicyClient.class);
@@ -20,7 +22,7 @@ public class PolicyClient extends WebServiceGatewaySupport {
         log.info("Requesting policy for " + name);
 
         GetPolicyResponse response = (GetPolicyResponse) getWebServiceTemplate()
-            .marshalSendAndReceive("http://localhost:8080/ws",
+            .marshalSendAndReceive("http://localhost:8088/ws",
                 request,
                 new SoapActionCallback(""));
 

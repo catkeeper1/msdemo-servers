@@ -3,7 +3,7 @@
    <soapenv:Header/>
    <soapenv:Body>
       <gs:getPolicyRequest>
-         <gs:name>11223344</gs:name>
+         <gs:name>75006884</gs:name>
       </gs:getPolicyRequest>
    </soapenv:Body>
 </soapenv:Envelope>

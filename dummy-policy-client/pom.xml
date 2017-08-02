@@ -6,7 +6,6 @@
     <groupId>org.ckr.msdemo</groupId>
     <artifactId>dummy-policy-client</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -25,6 +24,11 @@
            <dependency>
                <groupId>org.springframework.ws</groupId>
                <artifactId>spring-ws-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -51,7 +55,7 @@
                     <generatePackage>org.ckr.msdemo.policy.ws</generatePackage>
                     <schemas>
                         <schema>
-                            <url>http://localhost:8080/ws/policy.wsdl</url>
+                            <url>src/main/resources/policy.wsdl</url>
                         </schema>
                     </schemas>
                 </configuration>
