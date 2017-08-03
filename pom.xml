@@ -6,11 +6,13 @@
 
     <groupId>org.ckr.msdemo</groupId>
     <artifactId>servers</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>authentication-server</module>
+        <module>authenticationserver</module>
         <module>dummy-policy-client</module>
         <module>dummy-policy-server</module>
+        <module>dummy-client-usage</module>
     </modules>
 </project>
