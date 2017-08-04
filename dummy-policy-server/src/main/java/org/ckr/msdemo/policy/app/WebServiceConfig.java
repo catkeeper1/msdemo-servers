@@ -14,6 +14,7 @@ import org.springframework.xml.xsd.XsdSchema;
 
 @EnableWs
 @Configuration
+//setting the wsdl
 public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
@@ -23,13 +24,14 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean(servlet, "/ws/*");
     }
 
+    // bean name is the name of wsdl
     @Bean(name = "policy")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema policySchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("PoliciesPort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://policy.msdemo.ckr.org/ws");
-        wsdl11Definition.setSchema(countriesSchema);
+        wsdl11Definition.setSchema(policySchema);
         return wsdl11Definition;
     }
 

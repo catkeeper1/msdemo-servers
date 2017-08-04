@@ -16,7 +16,7 @@ public class Application {
     @Bean
     CommandLineRunner lookup(PolicyClient policyClient) {
         return args -> {
-            String name = "11223344";
+            String name = "34449526";
 
             if (args.length > 0) {
                 name = args[0];
