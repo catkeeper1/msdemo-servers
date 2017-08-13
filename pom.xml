@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>authenticationserver</module>
+        <module>authentication-server</module>
         <module>dummy-policy-client</module>
         <module>dummy-policy-server</module>
         <module>dummy-client-usage</module>
