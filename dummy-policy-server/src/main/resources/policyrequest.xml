@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+				  xmlns:gs="http://policy.msdemo.ckr.org/ws">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <gs:getPolicyRequest>
+         <gs:name>75006884</gs:name>
+      </gs:getPolicyRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
