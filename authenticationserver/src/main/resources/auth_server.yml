@@ -1,0 +1,18 @@
+server:
+  port: 8081
+  context-path: /auth_server
+
+authsrv:
+  security:
+    algorithm: SHA256withECDSA
+    keystore:
+      name: authKeyStore.jks
+      password: keystorepassword
+      key:
+        alias: ecc256
+        password: keypassword
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.ckr.msdemo.authserver: DEBUG
