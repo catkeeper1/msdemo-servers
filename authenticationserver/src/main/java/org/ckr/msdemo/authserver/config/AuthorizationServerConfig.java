@@ -79,6 +79,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll")
                 .checkTokenAccess("denyAll()");
+                //.passwordEncoder() assign password encoder here.
+
 
         //in case need to support other specail authentication approach, need to insert the customized authentication
         //filter as below:
