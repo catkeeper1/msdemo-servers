@@ -104,6 +104,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(tokenEnpointSecurityConfig.authenticationManagerBean())
                  .accessTokenConverter(jwtAccessTokenConverter);
+
+        //use this to customize exception handling: endpoints.exceptionTranslator()
         //endpoints.accessTokenConverter()
         setJwtAlgorithms();
     }
