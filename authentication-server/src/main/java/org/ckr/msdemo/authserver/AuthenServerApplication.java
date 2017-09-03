@@ -4,7 +4,7 @@ package org.ckr.msdemo.authserver;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
-@SpringBootApplication(scanBasePackages = "org.ckr.msdemo")
+@SpringBootApplication(scanBasePackages = "org.ckr.msdemo.authserver")
 public class AuthenServerApplication {
 
 

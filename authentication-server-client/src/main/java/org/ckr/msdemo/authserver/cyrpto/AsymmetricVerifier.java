@@ -1,4 +1,4 @@
-package org.ckr.msdemo.authserver.crypto;
+package org.ckr.msdemo.authserver.cyrpto;
 
 import org.springframework.security.jwt.crypto.sign.InvalidSignatureException;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;

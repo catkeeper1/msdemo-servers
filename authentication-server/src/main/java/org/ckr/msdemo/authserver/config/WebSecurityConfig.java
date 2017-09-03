@@ -1,13 +1,12 @@
 package org.ckr.msdemo.authserver.config;
 
-import org.ckr.msdemo.authserver.service.ClientUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
  * Created by Administrator on 2017/8/19.
@@ -17,25 +16,24 @@ public class WebSecurityConfig {
 
 
 
-    //@Configuration
+    @Configuration
     @Order(1)
     public static class AuthenticationServerSecurityConfig extends WebSecurityConfigurerAdapter {
-        @Autowired
-        private ClientUserDetailsService clientUserDetailsService;
+//        @Autowired
+//        private ClientUserDetailsService clientUserDetailsService;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             // @formatter:off
             http
                 .authorizeRequests()
-                .antMatchers("/oauth/token")
-                    .hasAnyRole("AUTHEN_SERVER_CLIENT")
                 .antMatchers("/oauth/authorize")
-                    .denyAll()
-                .antMatchers("/oauth/check_token")
                     .denyAll()
                 .antMatchers("/oauth/confirm_access")
                     .denyAll()
+            .and()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.NEVER);
 //            .and()
 //                .httpBasic();
             // @formatter:on

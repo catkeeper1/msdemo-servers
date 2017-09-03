@@ -1,7 +1,7 @@
 package org.ckr.msdemo.authserver.config;
 
-import org.ckr.msdemo.authserver.crypto.AsymmetricSigner;
-import org.ckr.msdemo.authserver.crypto.AsymmetricVerifier;
+import org.ckr.msdemo.authserver.cyrpto.AsymmetricSigner;
+import org.ckr.msdemo.authserver.cyrpto.AsymmetricVerifier;
 import org.ckr.msdemo.authserver.service.AuthServerClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.jwt.JwtAlgorithms;
@@ -19,20 +18,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import java.lang.reflect.Field;
-import java.security.Key;
-import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
-import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.ECPublicKey;
-import java.security.spec.ECPublicKeySpec;
 import java.util.Map;
 
 /**
@@ -211,7 +203,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 
         /**
-         * Override this method to make sure it always return true.
+         * Override the JwtAccessTokenConverter.isPublic() to make sure it always return true.
          * Otherwise, the "oauth/token_key" endpoint will not work until there is an authentication.
          * It is expected that the "oauth/token_key" endpoint can be access by anyone.
          * @return always return true.
