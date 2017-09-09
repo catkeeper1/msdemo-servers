@@ -25,8 +25,8 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/9/3.
  */
-//@Configuration
-//@EnableResourceServer
+@EnableResourceServer
+@Configuration
 @EnableConfigurationProperties(ResourceServerConfig.class)
 @ConfigurationProperties(prefix = "ressrv")
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
@@ -41,10 +41,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private String verifyAlgorithm = "SHA256withECDSA";
 
-    private List<ResourceServerSecurityConfigurer> secuirtyConfigurerList = new ArrayList<>();
+    private List<ResourceServerCustomizedSecurityConfigurer> secuirtyConfigurerList = new ArrayList<>();
 
     @Autowired(required = false)
-    public void setSecuirtyConfigurerList(List<ResourceServerSecurityConfigurer> secuirtyConfigurerList) {
+    public void setSecuirtyConfigurerList(List<ResourceServerCustomizedSecurityConfigurer> secuirtyConfigurerList) {
         this.secuirtyConfigurerList = secuirtyConfigurerList;
     }
 
@@ -72,9 +72,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        for(ResourceServerSecurityConfigurer configuer : secuirtyConfigurerList) {
+        for(ResourceServerCustomizedSecurityConfigurer configuer : secuirtyConfigurerList) {
             configuer.configure(http);
         }
+        //http.authorizeRequests().anyRequest().permitAll();
 
     }
 

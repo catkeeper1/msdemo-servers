@@ -1,6 +1,7 @@
 package org.ckr.msdemo.reserver.config;
 
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 
 import java.lang.annotation.Documented;
@@ -15,6 +16,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@EnableWebSecurity
 @Import(ResourceServerConfig.class)
 public @interface EnableJWTTokenAuthentication {
 }
