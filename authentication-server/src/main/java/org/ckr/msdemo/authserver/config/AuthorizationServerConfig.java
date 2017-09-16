@@ -11,6 +11,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.jwt.JwtAlgorithms;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -25,6 +31,8 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -95,11 +103,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(tokenEnpointSecurityConfig.authenticationManagerBean())
-                 .accessTokenConverter(jwtAccessTokenConverter);
+                 .accessTokenConverter(jwtAccessTokenConverter)
+                 .userDetailsService(this.refreshTokenUserDetailService());
 
         //use this to customize exception handling: endpoints.exceptionTranslator()
         //endpoints.accessTokenConverter()
         setJwtAlgorithms();
+    }
+
+    @Bean
+    public TokenUserDetailService refreshTokenUserDetailService() {
+        return new TokenUserDetailService();
     }
 
     @Bean
@@ -185,9 +199,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Configuration
     public static class TokenEndPointSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication().withUser("userA").password("passwordA").authorities("au");
+            auth.inMemoryAuthentication()
+                    .withUser("userA").password("passwordA").authorities("au");
         }
 
         @Bean
@@ -212,6 +229,39 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         public boolean isPublic() {
             return true;
 
+        }
+    }
+
+    /**
+     * Used by token refresh function to indicate whether an user account is still active.
+     * When an access token is refreshed, this class will be used to load an instance of UserDetails of current.
+     * This instance of UserDetails will provide indicators to indicate whether current user account is expired,
+     * enabled...
+     */
+    public static class TokenUserDetailService implements UserDetailsService {
+
+        /**
+         * Return an instance of UserDetails for current user acount. The current implementation is always return
+         * an enabled, not expired, not locked account. Please chagne this implementation in case need to check the
+         * user account setting when access token is refreshed.
+         * @param username
+         * @return
+         * @throws UsernameNotFoundException
+         */
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            Collection<GrantedAuthority> grantedList = new ArrayList<>();
+
+            grantedList.add(new SimpleGrantedAuthority("au"));
+
+            User user = new User(username,
+                                 "",
+                                 true,
+                                 true,
+                                 true,
+                                 true, grantedList);
+
+            return user;
         }
     }
 
