@@ -37,6 +37,9 @@ import java.util.Map;
 
 /**
  * keytool -genkeypair -alias ecc256 -keypass keypassword -keyalg EC -keysize 256 -validity 36500 -keystore d:/authKeyStore.jks -storepass keystorepassword -dname "CN=CN, OU=OU, O=O, L=L, ST=ST, C=C"
+ * POST localhost:8081/auth_server/oauth/token?grant_type=password&username=userA&password=passwordA
+ * GET localhost:8081/auth_server/oauth/token_key
+ * POST localhost:8081/auth_server/oauth/token?grant_type=refresh_token&refresh_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ1c2VyQSIsInNjb3BlIjpbImFsbCJdLCJhdGkiOiJhMTJmNDdjZC0wZDJiLTQ2MWYtYjQ1Yi00MTNlMGVhNjZjYzYiLCJleHAiOjE1MDUxMjUyMTgsImF1dGhvcml0aWVzIjpbImF1Il0sImp0aSI6ImM2NWM4M2Y5LTE5ZWYtNDQ5NS04NjAyLTNmZDkwYjU0MzA3NCIsImNsaWVudF9pZCI6IkFCQyJ9.MEUCIQDdRhVB-MwQgTNulxDAFlV4tfcQ5mahgK2yTR0pIUAmvAIgAq10sR6rSNs6DvPQwSCsZnikKeZF9FccbXfeAHgc6mw
  * Created by Administrator on 2017/8/13.
  */
 @Configuration
