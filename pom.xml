@@ -13,4 +13,23 @@
         <module>authentication-server</module>
         <module>authentication-server-client</module>
     </modules>
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <modules>
+                <module>authentication-server</module>
+                <module>authentication-server-client</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>all</id>
+            <modules>
+                <module>authentication-server</module>
+                <module>authentication-server-client</module>
+                <module>dummy-policy-client</module>
+                <module>dummy-policy-server</module>
+                <module>dummy-client-usage</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
