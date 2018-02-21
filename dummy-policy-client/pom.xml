@@ -55,7 +55,7 @@
                     <generatePackage>org.ckr.msdemo.policy.ws</generatePackage>
                     <schemas>
                         <schema>
-                            <url>src/main/resources/policy.wsdl</url>
+                            <url>${project.basedir}/src/main/resources/policy.wsdl</url>
                         </schema>
                     </schemas>
                 </configuration>
