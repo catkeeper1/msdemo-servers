@@ -78,16 +78,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private TokenEndPointSecurityConfig tokenEnpointSecurityConfig;
 
+    /**
+     * Config the security checking for authentication server endpoints.
+     *
+     * <p>The "oauth/token_key" endpoint should can be access by everyone to download the public key.
+     * The "oauth/check_token" is not allowed to be access since this is not a real oauth server that
+     * need to support authentication for untrusted 3rd party.
+     * The "/oauth/token" endpoint will use the default basic authentication approach.
+     *
+     */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll")
                 .checkTokenAccess("denyAll()");
-                //.passwordEncoder() assign password encoder here.
+                //assign password encoder as below in case it is needed.
+                //.passwordEncoder()
 
 
-        //in case need to support other specail authentication approach, need to insert the customized authentication
-        //filter as below:
+        //in case need to support other special authentication approach for client(not for user),
+        // need to insert the customized authentication filter as below:
         //security.addTokenEndpointAuthenticationFilter();
+        //This customized filter will be placed before the default BasicAuthenticationFilter
     }
 
     @Override
