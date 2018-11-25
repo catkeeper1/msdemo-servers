@@ -1,7 +1,9 @@
 package org.ckr.msdemo.authserver.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
@@ -19,6 +21,9 @@ public class AuthServerClientDetailsService implements ClientDetailsService {
 
     private static final Collection<GrantedAuthority> authorities = new ArrayList<>();
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     static {
         authorities.add(new SimpleGrantedAuthority("CA"));
     }
@@ -29,7 +34,7 @@ public class AuthServerClientDetailsService implements ClientDetailsService {
         BaseClientDetails result = new BaseClientDetails();
 
         result.setClientId(clientId);
-        result.setClientSecret("EFGH");
+        result.setClientSecret(passwordEncoder.encode("EFGH"));
 
         Collection<String> grantTypes = new ArrayList<>();
         grantTypes.add("password");

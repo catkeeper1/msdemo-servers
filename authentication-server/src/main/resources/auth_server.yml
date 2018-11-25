@@ -14,5 +14,5 @@ authsrv:
 
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework: DEBUG
     org.ckr.msdemo.authserver: DEBUG

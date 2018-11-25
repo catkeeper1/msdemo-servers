@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.codec.Base64;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.jwt.JwtAlgorithms;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -90,9 +92,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll")
-                .checkTokenAccess("denyAll()");
+                .checkTokenAccess("denyAll()")
                 //assign password encoder as below in case it is needed.
-                //.passwordEncoder()
+                .passwordEncoder(clientPasswordEncoder());
 
 
         //in case need to support other special authentication approach for client(not for user),
@@ -128,6 +130,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public TokenUserDetailService refreshTokenUserDetailService() {
         return new TokenUserDetailService();
+    }
+
+    @Bean
+    public PasswordEncoder clientPasswordEncoder() {
+        return new StandardPasswordEncoder();
     }
 
     @Bean
