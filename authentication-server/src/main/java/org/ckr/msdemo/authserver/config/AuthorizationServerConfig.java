@@ -3,12 +3,17 @@ package org.ckr.msdemo.authserver.config;
 import org.ckr.msdemo.authserver.cyrpto.AsymmetricSigner;
 import org.ckr.msdemo.authserver.cyrpto.AsymmetricVerifier;
 import org.ckr.msdemo.authserver.service.AuthServerClientDetailsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +26,7 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.jwt.JwtAlgorithms;
+import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -47,6 +53,9 @@ import java.util.Map;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    private static Logger LOG = LoggerFactory.getLogger(AuthorizationServerConfig.class);
+
 //HS256
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMyMjM1NzAsInVzZXJfbmFtZSI6InVzZXJBIiwiYXV0aG9yaXRpZXMiOlsiYXV0aG9yaXR5QSJdLCJqdGkiOiI1MzZiYTAzOS0yODZjLTQ3NTUtOTJlZi0xMTI3YzhhMjg4YjkiLCJjbGllbnRfaWQiOiJBQkMiLCJzY29wZSI6WyJhbGwiXX0.z6cCm1xr6RsSEsztNdJjTooa8OiOsjPUUTas_1OQrZ0
 
@@ -119,18 +128,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(tokenEnpointSecurityConfig.authenticationManagerBean())
-                 .accessTokenConverter(jwtAccessTokenConverter)
-                 .userDetailsService(this.refreshTokenUserDetailService());
+                 .accessTokenConverter(jwtAccessTokenConverter);
+//                 .userDetailsService(this.refreshTokenUserDetailService());
 
         //use this to customize exception handling: endpoints.exceptionTranslator()
         //endpoints.accessTokenConverter()
         setJwtAlgorithms();
     }
 
-    @Bean
-    public TokenUserDetailService refreshTokenUserDetailService() {
-        return new TokenUserDetailService();
-    }
+//    @Bean
+//    public TokenUserDetailService refreshTokenUserDetailService() {
+//        return new TokenUserDetailService();
+//    }
 
     @Bean
     public PasswordEncoder clientPasswordEncoder() {
@@ -224,8 +233,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication()
-                    .withUser("userA").password("passwordA").authorities("au");
+//            auth.inMemoryAuthentication()
+//                    .withUser("userA").password("passwordA").authorities("aua");
+            auth.ldapAuthentication()
+                .userDnPatterns("uid={0},ou=people")
+                .groupSearchBase("ou=groups")
+                .userDetailsContextMapper(this.userDetailMapper())
+                .contextSource()
+                .url("ldap://localhost:8182/dc=springframework,dc=org");
+
+
+
+//                    .and()
+//                    .passwordCompare()
+//                    //.passwordEncoder(new LdapShaPasswordEncoder())
+//                    .passwordEncoder(new PlaintextPasswordEncoder())
+//                    .passwordAttribute("userPassword");
         }
 
         @Bean
@@ -233,6 +256,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
             return authenticationManagerBean();
 
+        }
+
+        @Bean
+        public UserDetailsContextMapper userDetailMapper() {
+            return new TokenUserDetailContextMapper();
         }
 
     }
@@ -259,30 +287,37 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      * This instance of UserDetails will provide indicators to indicate whether current user account is expired,
      * enabled...
      */
-    public static class TokenUserDetailService implements UserDetailsService {
+    public static class TokenUserDetailContextMapper implements UserDetailsContextMapper {
 
         /**
          * Return an instance of UserDetails for current user acount. The current implementation is always return
          * an enabled, not expired, not locked account. Please chagne this implementation in case need to check the
          * user account setting when access token is refreshed.
-         * @param username
-         * @return
-         * @throws UsernameNotFoundException
+         *
          */
         @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        public UserDetails mapUserFromContext(DirContextOperations ctx,
+                                              String username,
+                                              Collection<? extends GrantedAuthority> authorities) {
+
+            LOG.info("create user detail for user:{}", username);
             Collection<GrantedAuthority> grantedList = new ArrayList<>();
 
             grantedList.add(new SimpleGrantedAuthority("au"));
 
             User user = new User(username,
-                                 "",
-                                 true,
-                                 true,
-                                 true,
-                                 true, grantedList);
+                    "",
+                    true,
+                    true,
+                    true,
+                    true, grantedList);
 
             return user;
+        }
+
+        @Override
+        public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
+            throw new RuntimeException("Not supported.");
         }
     }
 

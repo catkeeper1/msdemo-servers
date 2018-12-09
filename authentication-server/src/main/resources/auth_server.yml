@@ -1,6 +1,13 @@
 server:
-  port: 8081
+  port: 8181
   context-path: /auth_server
+
+spring:
+  ldap:
+    embedded:
+      ldif: classpath:LDAP_server.ldif
+      base-dn: dc=springframework,dc=org
+      port: 8182
 
 authsrv:
   security:
@@ -14,5 +21,6 @@ authsrv:
 
 logging:
   level:
+    root: DEBUG
     org.springframework: DEBUG
     org.ckr.msdemo.authserver: DEBUG

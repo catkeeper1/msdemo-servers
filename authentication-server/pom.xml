@@ -47,6 +47,21 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
+        <!--ldap dependencies-->
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+        </dependency>
+        <!--ldap dependencies-->
+
     </dependencies>
 
     <build>
