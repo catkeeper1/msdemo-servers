@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.web.bind.annotation.RequestMethod;
+import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.*;
 import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.AllowableListValues;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.ExpandedParameterBuilderPlugin;
 import springfox.documentation.spi.service.OperationBuilderPlugin;
@@ -22,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import com.google.common.base.Predicate;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.reverse;
@@ -40,8 +44,9 @@ public class SwaggerConfig {
     public Docket AuthenticationEnpoints() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(PathSelectors.ant("/oauth/token"))
-                .build();
+                    .apis(new CustomizedPredicate())
+                    //.paths(PathSelectors.ant("/oauth/token"))
+                    .build();
 //                .globalOperationParameters(
 //                        newArrayList(new ParameterBuilder()
 //                                .name("Authorization")
@@ -50,6 +55,26 @@ public class SwaggerConfig {
 //                                .parameterType("header")
 //                                .required(false)
 //                                .build()));
+    }
+
+    public static class CustomizedPredicate implements Predicate<RequestHandler> {
+
+
+        @Override
+        public boolean apply(RequestHandler input) {
+
+            if(input.getRequestMapping().getPatternsCondition().getPatterns().contains("/oauth/token") &&
+               input.supportedMethods().contains(RequestMethod.POST)) {
+                return true;
+            }
+
+            if(input.getRequestMapping().getPatternsCondition().getPatterns().contains("/oauth/token_key") &&
+               input.supportedMethods().contains(RequestMethod.GET)) {
+                return true;
+            }
+
+            return false;
+        }
     }
 
     @Bean
@@ -73,21 +98,68 @@ public class SwaggerConfig {
             if("/oauth/token".equals(context.requestMappingPattern())) {
                 context.operationBuilder()
                     .summary("Conduct authentication for end user." +
-                             " If authentication passed, return refresh token and access token.")
+                             " If authentication passed, return refresh token and access token." +
+                             " If grant type is \"password\", need to pass user name and password for authentication." +
+                             " After authentication with \"password\" grant type passed, an refresh token will be " +
+                             "returned. This refresh token can be used when grant type is \"refresh token\"")
                     .parameters(newArrayList(
                         new ParameterBuilder()
                             .name("Authorization")
-                            .description("The basic authentication token.")
+                            .description("The 'Basic' HTTP Authentication token for client authentication." +
+                                    " For example: \"Basic QUJDOkVGR0g=\"")
                             .modelRef(new ModelRef("string"))
                             .parameterType("header")
                             .required(true)
+                            .order(1)
                             .build()
-
+                        ,
+                        new ParameterBuilder()
+                            .name("grant_type")
+                            .description("The grant type for the authentcation. Since password mode is being used" +
+                            " the value must be \"password\".")
+                            .modelRef(new ModelRef("string"))
+                            .parameterType("query")
+                            .allowableValues(new AllowableListValues(newArrayList("password",
+                                                                                  "refresh_token"),
+                                                                     "string"))
+                            .required(true)
+                            .build()
+                        ,
+                        new ParameterBuilder()
+                            .name("username")
+                            .description("The user name of the end user that need to be authenticated." +
+                                         "Should be used when grant type is \"password\".")
+                            .modelRef(new ModelRef("string"))
+                            .parameterType("query")
+                            .required(false)
+                            .order(3)
+                            .build()
+                        ,
+                        new ParameterBuilder()
+                            .name("password")
+                            .description("The password of the end user that need to be authenticated." +
+                                         "Should be used when grant type is \"password\"")
+                            .modelRef(new ModelRef("string"))
+                            .parameterType("query")
+                            .required(false)
+                            .order(4)
+                            .build()
+                        ,
+                        new ParameterBuilder()
+                            .name("refresh_token")
+                            .description("The token that is used to refresh to access token.." +
+                                         "Should be used when grant type is \"refresh token\"")
+                            .modelRef(new ModelRef("string"))
+                            .parameterType("query")
+                            .required(false)
+                            .order(5)
+                            .build()
                     ));
 
+            } else if("/oauth/token_key".equals(context.requestMappingPattern())) {
+                context.operationBuilder()
+                        .summary("Return the public key for token signature verification.");
             }
-
-
 
         }
     }
@@ -115,7 +187,6 @@ public class SwaggerConfig {
         static {
             Set<String> paramNames = new HashSet<>();
             paramNames.add("parameters");
-            paramNames.add("name");
             HIDDEN_PARAMS.put("/oauth/token", paramNames);
         }
 
@@ -137,11 +208,20 @@ public class SwaggerConfig {
         }
     }
 
+    /**
+     * Create an instance of {@link CustomizedExpandedParameterPlugin}.
+     * @return
+     */
     @Bean
     public ExpandedParameterBuilderPlugin expandedParameterBuilderPlugin() {
         return new CustomizedExpandedParameterPlugin();
     }
 
+    /**
+     * Used to hide all expanded parameter. Some parameters show in Swagger UI is triggered by
+     * "org.springframework.web.bind.annotation.ModelAttribute". All these parameters should not be shown
+     * so that using this plugin to hide them all.
+     */
     public static class CustomizedExpandedParameterPlugin implements ExpandedParameterBuilderPlugin {
 
         @Override
