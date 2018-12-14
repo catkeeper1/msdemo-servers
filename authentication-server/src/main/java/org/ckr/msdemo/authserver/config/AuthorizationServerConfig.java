@@ -128,8 +128,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(tokenEnpointSecurityConfig.authenticationManagerBean())
-                 .accessTokenConverter(jwtAccessTokenConverter);
-//                 .userDetailsService(this.refreshTokenUserDetailService());
+                 .accessTokenConverter(jwtAccessTokenConverter)
+                 .userDetailsService(this.userDetailMapper());
 
         //use this to customize exception handling: endpoints.exceptionTranslator()
         //endpoints.accessTokenConverter()
@@ -140,6 +140,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //    public TokenUserDetailService refreshTokenUserDetailService() {
 //        return new TokenUserDetailService();
 //    }
+
+    @Bean
+    public TokenUserDetailContextMapper userDetailMapper() {
+        return new TokenUserDetailContextMapper();
+    }
 
     @Bean
     public PasswordEncoder clientPasswordEncoder() {
@@ -229,7 +234,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Configuration
     public static class TokenEndPointSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
+        @Autowired
+        TokenUserDetailContextMapper tokenUserDetailContextMapper;
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -238,7 +244,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             auth.ldapAuthentication()
                 .userDnPatterns("uid={0},ou=people")
                 .groupSearchBase("ou=groups")
-                .userDetailsContextMapper(this.userDetailMapper())
+                .userDetailsContextMapper(tokenUserDetailContextMapper)
                 .contextSource()
                 .url("ldap://localhost:8182/dc=springframework,dc=org");
 
@@ -258,10 +264,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         }
 
-        @Bean
-        public UserDetailsContextMapper userDetailMapper() {
-            return new TokenUserDetailContextMapper();
-        }
+
 
     }
 
@@ -281,13 +284,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         }
     }
 
+
+
     /**
      * Used by token refresh function to indicate whether an user account is still active.
      * When an access token is refreshed, this class will be used to load an instance of UserDetails of current.
      * This instance of UserDetails will provide indicators to indicate whether current user account is expired,
      * enabled...
      */
-    public static class TokenUserDetailContextMapper implements UserDetailsContextMapper {
+    public static class TokenUserDetailContextMapper implements UserDetailsContextMapper, UserDetailsService {
 
         /**
          * Return an instance of UserDetails for current user acount. The current implementation is always return
@@ -300,6 +305,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                                               String username,
                                               Collection<? extends GrantedAuthority> authorities) {
 
+            return loadUserByUsername(username);
+        }
+
+        @Override
+        public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
+            throw new RuntimeException("Not supported.");
+        }
+
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             LOG.info("create user detail for user:{}", username);
             Collection<GrantedAuthority> grantedList = new ArrayList<>();
 
@@ -313,11 +328,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     true, grantedList);
 
             return user;
-        }
-
-        @Override
-        public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
-            throw new RuntimeException("Not supported.");
         }
     }
 
