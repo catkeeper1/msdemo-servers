@@ -22,7 +22,7 @@ public class PolicyClientTest {
     @Test
     public void getPolicyResponseTest() throws Exception {
         PolicyClient policyClient = policyConfiguration.policyClient(policyConfiguration.marshaller());
-        GetPolicyResponse response = policyClient.getPolicy("75006884");
+        //GetPolicyResponse response = policyClient.getPolicy("75006884");
         System.out.println("===================================================");
 //        assertThat(response.getPolicy().getPolicyno()).isEqualTo("75006884");
 //        assertThat(response.getPolicy().getPolicystatus()).isEqualTo(2);

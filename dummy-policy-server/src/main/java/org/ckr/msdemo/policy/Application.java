@@ -27,7 +27,7 @@ public class Application {
 
     @RequestMapping(path = "getPO")
     public String getPolicyOwnerName(@RequestParam String policyNo) {
-        Policy policy = policyRepository.findPolicyByPolicyNo(policyNo);
+        Policy policy = policyRepository.findAllByPolicyNo(policyNo);
         if (null == policy) {
             return "no policy no found " + policyNo;
         } else {

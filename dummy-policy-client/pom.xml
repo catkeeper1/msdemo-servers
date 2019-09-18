@@ -53,11 +53,15 @@
                 <configuration>
                     <schemaLanguage>WSDL</schemaLanguage>
                     <generatePackage>org.ckr.msdemo.policy.ws</generatePackage>
-                    <schemas>
-                        <schema>
-                            <url>${project.basedir}/src/main/resources/policy.wsdl</url>
-                        </schema>
-                    </schemas>
+                    <schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
+                    <schemaIncludes>
+                        <include>policy.wsdl</include>
+                    </schemaIncludes>
+                    <!--<schemas>-->
+                        <!--<schema>-->
+                            <!--<url>${project.basedir}/src/main/resources/policy.wsdl</url>-->
+                        <!--</schema>-->
+                    <!--</schemas>-->
                 </configuration>
             </plugin>
             <!-- end::wsdl[] -->

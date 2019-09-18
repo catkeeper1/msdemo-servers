@@ -14,6 +14,6 @@
         <module>authentication-server-client</module>
         <module>dummy-policy-client</module>
         <module>dummy-policy-server</module>
-        <module>dummy-client-usage</module>
+
     </modules>
 </project>
